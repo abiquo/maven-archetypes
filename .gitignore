@@ -1,0 +1,9 @@
+target
+build
+.class
+catalina.base_IS_UNDEFINED
+.project
+.settings
+.classpath
+test-output
+*~
