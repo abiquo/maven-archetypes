@@ -1,4 +1,4 @@
-maven-archetypes
+Maven archetypes
 ================
 
 Abiquo Maven archetypes

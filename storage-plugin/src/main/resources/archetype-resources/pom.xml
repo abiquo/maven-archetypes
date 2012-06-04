@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.abiquo</groupId>
+        <artifactId>platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>jar</packaging>
+    <name>Custom Abiquo Storage Plugin</name>
+    
+    <!-- Repositories -->
+    <repositories>
+        <repository>
+            <id>abiquo-repo</id>
+            <name>Abiquo Maven Repository</name>
+            <url>http://repo.community.abiquo.com/repo</url>
+        </repository>
+    </repositories>
+    <!-- Plugin Repositories -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>abiquo-repo</id>
+            <name>Abiquo Maven Repository</name>
+            <url>http://repo.community.abiquo.com/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.abiquo</groupId>
+            <artifactId>ssm-model</artifactId>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>com.abiquo</groupId>
+            <artifactId>ssm-model</artifactId>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.abiquo</groupId>
+            <artifactId>api-model</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>
