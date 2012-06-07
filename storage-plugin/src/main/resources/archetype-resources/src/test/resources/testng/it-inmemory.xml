@@ -2,10 +2,10 @@
 <suite name="Custom Storage Plugin Tests" verbose="1">
     <test name="CustomPluginTest">
         <!-- The type of the plugin as set in the @Plugin annotation -->
-        <parameter name="pluginType" value="CHANGEME" />
+        <parameter name="pluginType" value="IN_MEMORY" /> <!-- CHANGE! -->
         
         <!-- Access to the device management API -->
-        <parameter name="deviceHost" value="CHANGEME" />
+        <parameter name="deviceHost" value="127.0.0.1" /> <!-- CHANGE! -->
         
         <!-- Change if the port is not the default one in the @Plugin annotation
         <parameter name="managementPort" value="CHANGEME" />
@@ -17,7 +17,7 @@
         -->
         
         <!-- Name of the pool to be used in the tests -->
-        <parameter name="poolName" value="CHANGEME" />
+        <parameter name="poolName" value="In Memory" /> <!-- CHANGE! -->
         
         <!-- DO NOT CHANGE. This class implements the default test suite -->
         <classes>
