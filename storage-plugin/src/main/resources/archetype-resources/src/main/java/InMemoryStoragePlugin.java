@@ -8,6 +8,7 @@ import java.util.Map;
 import com.abiquo.ssm.exception.PluginError;
 import com.abiquo.ssm.exception.PluginException;
 import com.abiquo.ssm.model.Device;
+import com.abiquo.ssm.model.IscsiAddress;
 import com.abiquo.ssm.model.Pool;
 import com.abiquo.ssm.model.Volume;
 import com.abiquo.ssm.plugin.AbstractStoragePlugin;
@@ -88,8 +89,12 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
         created.setSizeInMB(volume.getSizeInMB());
         created.setAvailableInMB(volume.getSizeInMB());
         created.setUsedInMB(0L);
-        created.setIqn("iqn.1993-08.org.debian:01:b22bb69c97d3");
-        created.setLun(0);
+        
+        IscsiAddress iscsiAddress = new IscsiAddress();
+        iscsiAddress.setPortal(device.getIp());
+        iscsiAddress.setIqn("iqn.1993-08.org.debian:01:b22bb69c97d3");
+        iscsiAddress.setLun(0);
+        created.setIscsiAddress(iscsiAddress);
 
         volumes.put(created.getUuid(), created);
 
@@ -130,8 +135,7 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
         Volume original = volumes.get(volume.getUuid());
         Volume resize = new Volume();
         resize.setUuid(original.getUuid());
-        resize.setIqn(original.getIqn());
-        resize.setLun(original.getLun());
+        resize.setIscsiAddress(original.getIscsiAddress());
         // Update size
         resize.setSizeInMB(volume.getSizeInMB());
         resize.setAvailableInMB(volume.getSizeInMB());
@@ -150,23 +154,23 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
     }
 
     @Override
-    public String addInitiatorToPool(final Device device, final Pool pool, final String ostype,
-        final String initiatorIQN, final String uuid) throws PluginException
+    public IscsiAddress grantAccess(final Device device, final Pool pool, final String ostype,
+        final String initiatorIQN, final String volumeUuid) throws PluginException
     {
         // Validate pool and volume existance
         getPool(device, pool.getName());
-        Volume volume = getVolume(device, pool, uuid);
+        Volume volume = getVolume(device, pool, volumeUuid);
 
-        // Grant access and return the IQN and LUN
-        return volume.getIqn() + "-lun-" + volume.getLun();
+        return volume.getIscsiAddress();
     }
 
     @Override
-    public void removeInitiatorFromPool(final Device device, final Pool pool, final String ostype,
-        final String initiatorIQN) throws PluginException
+    public void revokeAccess(final Device device, final Pool pool, final String ostype,
+        final String initiatorIQN, final String volumeUuid) throws PluginException
     {
         // Validate pool and volume existance
         getPool(device, pool.getName());
+        getVolume(device, pool, volumeUuid);
 
         // Revoke access
     }
