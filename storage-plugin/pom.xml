@@ -9,18 +9,39 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>storage-plugin-archetype</artifactId>
     <version>2.2</version>
-    <packaging>jar</packaging>
-    <name>Storage Plugin Archetype</name>
+    <packaging>maven-archetype</packaging>
+    <name>Abiquo Storage Plugin Archetype</name>
+    <description>Maven archetype for an Abiquo Storage Plugin</description>
     
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-archetype-plugin</artifactId>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-archetype-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.archetype</groupId>
+                <artifactId>archetype-packaging</artifactId>
+                <version>2.2</version>
+            </extension>
+        </extensions>
     </build>
     
 </project>
