@@ -8,7 +8,7 @@
     
     <modelVersion>4.0.0</modelVersion>
     <artifactId>storage-plugin-archetype</artifactId>
-    <version>2.2</version>
+    <version>2.2-SNAPSHOT</version>
     <packaging>maven-archetype</packaging>
     <name>Abiquo Storage Plugin Archetype</name>
     <description>Maven archetype for an Abiquo Storage Plugin</description>
