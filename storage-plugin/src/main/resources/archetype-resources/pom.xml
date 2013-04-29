@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.abiquo</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.4.0</version>
     </parent>
     
     <groupId>${groupId}</groupId>
@@ -11,23 +11,6 @@
     <version>${version}</version>
     <packaging>jar</packaging>
     <name>Custom Abiquo Storage Plugin</name>
-    
-    <!-- Repositories -->
-    <repositories>
-        <repository>
-            <id>abiquo-repo</id>
-            <name>Abiquo Maven Repository</name>
-            <url>http://repo.community.abiquo.com/repo</url>
-        </repository>
-    </repositories>
-    <!-- Plugin Repositories -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>abiquo-repo</id>
-            <name>Abiquo Maven Repository</name>
-            <url>http://repo.community.abiquo.com/repo</url>
-        </pluginRepository>
-    </pluginRepositories>
     
     <dependencies>
         <dependency>
