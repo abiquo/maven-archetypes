@@ -30,8 +30,7 @@
         </dependency>
         <dependency>
             <groupId>com.abiquo</groupId>
-            <artifactId>api-model</artifactId>
-            <classifier>tests</classifier>
+            <artifactId>commons-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
