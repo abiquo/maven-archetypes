@@ -7,8 +7,9 @@ import java.util.Map;
 
 import com.abiquo.ssm.exception.PluginError;
 import com.abiquo.ssm.exception.PluginException;
+import com.abiquo.ssm.model.Address;
+import com.abiquo.ssm.model.ClientDetails;
 import com.abiquo.ssm.model.Device;
-import com.abiquo.ssm.model.IscsiAddress;
 import com.abiquo.ssm.model.Pool;
 import com.abiquo.ssm.model.Volume;
 import com.abiquo.ssm.plugin.AbstractStoragePlugin;
@@ -18,8 +19,8 @@ import com.abiquo.ssm.plugin.annotations.Plugin;
  * In memory example storage plugin for the Abiquo storage manager.
  */
 @Plugin(type = "IN_MEMORY", // Unique name for this plugin (example: NETAPP, LVM)
-defaultIscsiPort = 3260, // Port used to connect to the device using the iSCSI protocol
 defaultManagementPort = 80, // CHANGE! Port used to connect to teh device administration API
+defaultServicePort = 3260, // Port used by hypervisors to connect to the volumes in the device (iSCSI port, etc)
 requiresAuthentication = false // Does the management APi require authentication?
 )
 public class InMemoryStoragePlugin extends AbstractStoragePlugin
@@ -33,11 +34,18 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
         // Add a default storage pool
         Pool pool = new Pool();
         pool.setName("In Memory");
+        pool.setType("ISCSI");
         pool.setSizeInMB(51200L); // 50 GB
         pool.setUsedInMB(25600L); // 25 GB
         pool.setAvailableInMB(25600L); // 25 GB
 
         pools.put(pool.getName(), pool);
+    }
+    
+    @Override
+    public void validateConfiguration() throws IllegalStateException
+    {
+        // Plugin is properly configured
     }
 
     @Override
@@ -90,11 +98,8 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
         created.setAvailableInMB(volume.getSizeInMB());
         created.setUsedInMB(0L);
         
-        IscsiAddress iscsiAddress = new IscsiAddress();
-        iscsiAddress.setPortal(device.getIp());
-        iscsiAddress.setIqn("iqn.1993-08.org.debian:01:b22bb69c97d3");
-        iscsiAddress.setLun(0);
-        created.setIscsiAddress(iscsiAddress);
+        created.setAddress(Address.iscsi(device.getIp(), device.getPort(),
+            "iqn.1993-08.org.debian:01:b22bb69c97d3", 0));
 
         volumes.put(created.getUuid(), created);
 
@@ -135,7 +140,7 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
         Volume original = volumes.get(volume.getUuid());
         Volume resize = new Volume();
         resize.setUuid(original.getUuid());
-        resize.setIscsiAddress(original.getIscsiAddress());
+        resize.setAddress(original.getAddress());
         // Update size
         resize.setSizeInMB(volume.getSizeInMB());
         resize.setAvailableInMB(volume.getSizeInMB());
@@ -154,19 +159,19 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
     }
 
     @Override
-    public IscsiAddress grantAccess(final Device device, final Pool pool, final String ostype,
-        final String initiatorIQN, final String volumeUuid) throws PluginException
+    public Address grantAccess(final Device device, final Pool pool, final String volumeUuid,
+        final ClientDetails clientDetails) throws PluginException
     {
         // Validate pool and volume existance
         getPool(device, pool.getName());
         Volume volume = getVolume(device, pool, volumeUuid);
 
-        return volume.getIscsiAddress();
+        return volume.getAddress();
     }
 
     @Override
-    public void revokeAccess(final Device device, final Pool pool, final String ostype,
-        final String initiatorIQN, final String volumeUuid) throws PluginException
+    public void revokeAccess(final Device device, final Pool pool, final String volumeUuid,
+        final ClientDetails clientDetails) throws PluginException
     {
         // Validate pool and volume existance
         getPool(device, pool.getName());
