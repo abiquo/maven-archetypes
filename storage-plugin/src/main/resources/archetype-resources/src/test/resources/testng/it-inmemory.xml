@@ -5,10 +5,12 @@
         <parameter name="pluginType" value="IN_MEMORY" /> <!-- CHANGE! -->
         
         <!-- Access to the device management API -->
-        <parameter name="deviceHost" value="127.0.0.1" /> <!-- CHANGE! -->
+        <parameter name="managementIp" value="127.0.0.1" /> <!-- CHANGE! -->
+        <parameter name="serviceIp" value="127.0.0.1" /> <!-- CHANGE! -->
         
         <!-- Change if the port is not the default one in the @Plugin annotation
         <parameter name="managementPort" value="CHANGEME" />
+        <parameter name="servicePort" value="CHANGEME" />
         -->
         
         <!-- Uncomment if the plugin requires authentication 
