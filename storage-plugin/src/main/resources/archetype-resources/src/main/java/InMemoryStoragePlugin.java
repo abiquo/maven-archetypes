@@ -98,7 +98,7 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
         created.setAvailableInMB(volume.getSizeInMB());
         created.setUsedInMB(0L);
         
-        created.setAddress(Address.iscsi(device.getIp(), device.getPort(),
+        created.setAddress(Address.iscsi(device.getServiceIp(), device.getServicePort(),
             "iqn.1993-08.org.debian:01:b22bb69c97d3", 0));
 
         volumes.put(created.getUuid(), created);
