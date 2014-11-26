@@ -3,12 +3,11 @@
     <parent>
         <groupId>com.abiquo</groupId>
         <artifactId>platform</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>storage-plugin-archetype</artifactId>
-    <version>3.2.0</version>
     <packaging>maven-archetype</packaging>
     <name>Abiquo Storage Plugin Archetype</name>
     <description>Maven archetype for an Abiquo Storage Plugin</description>
