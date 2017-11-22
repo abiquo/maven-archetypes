@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.abiquo</groupId>
         <artifactId>platform</artifactId>
-        <version>4.0.1</version>
+        <version>${parent.version}</version>
     </parent>
 
-    <groupId>${groupId}</groupId>
-    <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
+    <groupId>\${groupId}</groupId>
+    <artifactId>\${artifactId}</artifactId>
+    <version>\${version}</version>
     <packaging>jar</packaging>
     <name>Custom Abiquo Backup Plugin</name>
 
