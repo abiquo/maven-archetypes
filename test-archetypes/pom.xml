@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.abiquo</groupId>
+        <artifactId>platform</artifactId>
+        <version>4.0.4</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>test-archetypes</artifactId>
+    <name>Test Abiquo Plugins Archetype</name>
+    <packaging>jar</packaging>
+    <description>Project to test the abiquo plugins archetypes</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>test-backup</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>src/test/resources/test-archetype</executable>
+                            <arguments>
+                                <argument>${env.JAVA_HOME}</argument>
+                                <argument>backup-plugin-archetype</argument>
+                                <argument>${backuppluginarchetype.version}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>test-storage</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>src/test/resources/test-archetype</executable>
+                            <arguments>
+                                <argument>${env.JAVA_HOME}</argument>
+                                <argument>storage-plugin-archetype</argument>
+                                <argument>${storagepluginarchetype.version}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+java_home=$1
+archeArtifactId=$2
+testDir=${archeArtifactId//-} # escape '-' char because its not a valid java package
+archeVersion=$3
+
+export JAVA_HOME=$java_home
+
+cd target
+
+echo "Testing archetype com.abiquo.$archeArtifactId:$archeVersion"
+mvn archetype:generate -DgroupId=com.abiquo.test -DartifactId=$testDir \
+    -DarchetypeGroupId=com.abiquo -DarchetypeArtifactId=$archeArtifactId -DarchetypeVersion=$archeVersion \
+    -DarchetypeCatalog=local -DinteractiveMode=false -Dgoals=clean,compile
+
+cd ..
