@@ -39,6 +39,11 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
 
     // Schedule Configuration //
 
+    /**
+     * This method is called when a new virtual machine is deployed and it contains backup configuration.
+     * <p>
+     * So the virtual macine is already deployed at this point and is the time to configure the backup schedule configuration.
+     */
     @Override
     public void applySchedule(final CustomBackupConnection connection,
         final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
@@ -47,6 +52,11 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
         // Configure the given virtual machine to be backed up using the given schedule configuration
     }
 
+    /**
+     * This method is called when a virtual machine is reconfigured and the backup schedule data is changed.
+     * <p>
+     * So the changes are already paplied in the virtual machine is time to change/add/remove the backup schedule configuration.
+     */
     @Override
     public void applySchedule(final CustomBackupConnection connection,
         final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
@@ -56,6 +66,11 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
         // Configure the given virtual machine to be backed up using the given new schedule configuration instead of the old one 
     }
 
+    /**
+    * This method is called when a virtual machine is going to be undeployed and it contains some backup configuration.
+    * <p>
+    * So the virtual machine still exist but the backup schedule configuration need to be removed before the virtual machine is undeployed.
+    */
     @Override
     public void removeSchedule(final CustomBackupConnection connection,
         final VirtualMachineBackupRestoreInfo virtualMachineIdentifier)
@@ -66,6 +81,11 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
 
     // On demand actions //
 
+    /**
+     * This method is called for the on demand backup action.
+     * <p>
+     * So the virtual machine exists in the hypervisor and user request a backup.
+     */
     @Override
     public BackupResult executeBackup(final CustomBackupConnection connection,
         final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
@@ -75,6 +95,11 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
         return new BackupResult();
     }
 
+    /**
+     * This method is called when user request a restore of an existing backup.
+     * <p>
+     * The virtual machine could exist or not in the hypervisor.
+     */
     @Override
     public RestoreResult executeRestore(final CustomBackupConnection connection,
         final VirtualMachineBackupRestoreInfo virtualMachineIdentifier, final String backupId)
@@ -86,6 +111,9 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
 
     // Backup and restore results //
 
+    /**
+     * This method is called for the Abiquo API periodical task in order to save the results in the Abiquo database.
+     */
     @Override
     public List<BackupResult> listResults(final CustomBackupConnection connection,
         final ZonedDateTime lastCheckDate, final Set<String> inProgressResultProviderIds)
@@ -97,6 +125,10 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
         return new ArrayList<>();
     }
 
+    /**
+     * This method is called from the same Abiquo API periodical task in order to remove the already expired backups
+     * from the Abiquo database.
+     */
     @Override
     public List<String> getExpiredResults(final CustomBackupConnection connection,
         final List<String> providerIds) throws BackupPluginException
