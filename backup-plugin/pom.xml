@@ -25,6 +25,12 @@
                     <escapeString>\</escapeString>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
