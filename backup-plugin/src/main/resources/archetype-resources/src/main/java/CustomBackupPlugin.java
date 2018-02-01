@@ -9,7 +9,7 @@ import com.abiquo.backup.model.BackupResult;
 import com.abiquo.backup.model.BackupResult.RestoreResult;
 import com.abiquo.backup.model.BackupSchedule;
 import com.abiquo.backup.model.OnDemandBackupOptions;
-import com.abiquo.backup.model.VirtualMachineBackupRestoreInfo;
+import com.abiquo.backup.model.VirtualMachineBackupRestoreAndDisasterRecoveryData;
 import com.abiquo.backup.plugin.BackupScheduling;
 import com.abiquo.backup.plugin.annotation.BackupConnectionMetadata;
 import com.abiquo.backup.plugin.exception.BackupPluginException;
@@ -46,7 +46,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
      */
     @Override
     public void applySchedule(final CustomBackupConnection connection,
-        final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
+        final VirtualMachineBackupRestoreAndDisasterRecoveryData virtualMachineIdentifier,
         final BackupSchedule backupSchedule) throws BackupPluginException
     {
         // Configure the given virtual machine to be backed up using the given schedule configuration
@@ -59,7 +59,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
      */
     @Override
     public void applySchedule(final CustomBackupConnection connection,
-        final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
+        final VirtualMachineBackupRestoreAndDisasterRecoveryData virtualMachineIdentifier,
         final BackupSchedule oldBackupSchedule, final BackupSchedule newBackupSchedule)
         throws BackupPluginException
     {
@@ -73,7 +73,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
     */
     @Override
     public void removeSchedule(final CustomBackupConnection connection,
-        final VirtualMachineBackupRestoreInfo virtualMachineIdentifier)
+        final VirtualMachineBackupRestoreAndDisasterRecoveryData virtualMachineIdentifier)
         throws BackupPluginException
     {
         // Remove the schedule configuration of the given virtual machine because is going to be undeployed
@@ -88,7 +88,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
      */
     @Override
     public BackupResult executeBackup(final CustomBackupConnection connection,
-        final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
+        final VirtualMachineBackupRestoreAndDisasterRecoveryData virtualMachineIdentifier,
         final OnDemandBackupOptions options) throws BackupPluginException
     {
         // Execute a backup of the given virtualmachine
@@ -102,7 +102,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
      */
     @Override
     public RestoreResult executeRestore(final CustomBackupConnection connection,
-        final VirtualMachineBackupRestoreInfo virtualMachineIdentifier, final String backupId)
+        final VirtualMachineBackupRestoreAndDisasterRecoveryData virtualMachineIdentifier, final String backupId)
         throws BackupPluginException
     {
         // Execute a restore of the given virtual machine and backup
