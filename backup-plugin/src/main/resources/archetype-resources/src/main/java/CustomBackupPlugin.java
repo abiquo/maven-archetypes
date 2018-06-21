@@ -58,7 +58,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
      * So the changes are already paplied in the virtual machine is time to change/add/remove the backup schedule configuration.
      */
     @Override
-    public void applySchedule(final CustomBackupConnection connection,
+    public void applyNewSchedule(final CustomBackupConnection connection,
         final VirtualMachineBackupRestoreInfo virtualMachineIdentifier,
         final BackupSchedule oldBackupSchedule, final BackupSchedule newBackupSchedule)
         throws BackupPluginException
