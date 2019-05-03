@@ -1,15 +1,15 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.abiquo</groupId>
         <artifactId>platform</artifactId>
         <version>4.6.1-SNAPSHOT</version>
     </parent>
-
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>test-archetypes</artifactId>
-    <name>Test Abiquo Plugins Archetype</name>
     <packaging>jar</packaging>
+    <name>Test Abiquo Plugins Archetype</name>
     <description>Project to test the abiquo plugins archetypes</description>
 
     <build>
@@ -28,10 +28,10 @@
                 <executions>
                     <execution>
                         <id>test-backup</id>
-                        <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <phase>test</phase>
                         <configuration>
                             <executable>src/test/resources/test-archetype</executable>
                             <arguments>
@@ -44,10 +44,10 @@
 
                     <execution>
                         <id>test-storage</id>
-                        <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <phase>test</phase>
                         <configuration>
                             <executable>src/test/resources/test-archetype</executable>
                             <arguments>
