@@ -5,25 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.abiquo.ssm.exception.PluginError;
-import com.abiquo.ssm.exception.PluginException;
+import com.abiquo.commons.model.enumerator.ConstraintKey;
+import com.abiquo.commons.plugin.annotation.PluginMetadata;
+import com.abiquo.commons.plugin.exception.HypervisorPluginError;
+import com.abiquo.commons.plugin.exception.HypervisorPluginException;
 import com.abiquo.ssm.model.Address;
 import com.abiquo.ssm.model.ClientDetails;
 import com.abiquo.ssm.model.Device;
 import com.abiquo.ssm.model.Pool;
 import com.abiquo.ssm.model.Volume;
-import com.abiquo.ssm.plugin.AbstractStoragePlugin;
-import com.abiquo.ssm.plugin.annotations.Plugin;
+import com.abiquo.ssm.plugin.Storage;
+import com.google.common.base.Enums;
+import com.google.common.base.Optional;
 
 /**
  * In memory example storage plugin for the Abiquo storage manager.
  */
-@Plugin(type = "IN_MEMORY", // Unique name for this plugin (example: NETAPP, LVM)
-defaultManagementPort = 80, // CHANGE! Port used to connect to teh device administration API
-defaultServicePort = 3260, // Port used by hypervisors to connect to the volumes in the device (iSCSI port, etc)
-requiresAuthentication = false // Does the management APi require authentication?
-)
-public class InMemoryStoragePlugin extends AbstractStoragePlugin
+@PluginMetadata(type = "IN_MEMORY", // Unique name for this plugin (example: NETAPP, LVM)
+friendlyName = "generic iSCSI storage", // Fiendly name to show in the UI
+version = "4.0.0", supportedVersions = "4.0.0")
+public class InMemoryStoragePlugin implements Storage<Device>
 {
     private Map<String, Volume> volumes = new HashMap<String, Volume>();
 
@@ -43,53 +44,75 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
     }
     
     @Override
+    public String getConstraint(final String key)
+    {
+        Optional<ConstraintKey> constraint = Enums.getIfPresent(ConstraintKey.class, key);
+        if (!constraint.isPresent())
+        {
+            return null;
+        }
+        switch (constraint.get())
+        {
+            case STORAGE_DEFAULT_MANAGEMENT_PORT:
+                return "3260";
+            case STORAGE_DEFAULT_SERVICE_PORT:
+                return "3260";
+            case STORAGE_REQUIRES_AUTHENTICATION:
+                return "false";
+            default:
+                break;
+        }
+        return null;
+    }
+
+    @Override
     public void validateConfiguration() throws IllegalStateException
     {
         // Plugin is properly configured
     }
 
     @Override
-    public List<Pool> listPools(final Device device) throws PluginException
+    public List<Pool> listPools(final Device device) throws HypervisorPluginException
     {
         return new ArrayList<Pool>(pools.values());
     }
 
     @Override
-    public Pool getPool(final Device device, final String poolName) throws PluginException
+    public Pool getPool(final Device device, final String poolName) throws HypervisorPluginException
     {
         Pool pool = pools.get(poolName);
         if (pool == null)
         {
-            throw new PluginException(PluginError.RESOURCE_NOT_FOUND, "Unexisting pool");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting pool");
         }
         return pool;
     }
 
     @Override
-    public List<Volume> listVolumes(final Device device, final Pool pool) throws PluginException
+    public List<Volume> listVolumes(final Device device, final Pool pool) throws HypervisorPluginException
     {
         return new ArrayList<Volume>(volumes.values());
     }
 
     @Override
     public Volume getVolume(final Device device, final Pool pool, final String uuid)
-        throws PluginException
+        throws HypervisorPluginException
     {
         Volume volume = volumes.get(uuid);
         if (volume == null)
         {
-            throw new PluginException(PluginError.RESOURCE_NOT_FOUND, "Unexisting volume");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting volume");
         }
         return volume;
     }
 
     @Override
     public Volume createVolume(final Device device, final Pool pool, final Volume volume)
-        throws PluginException
+        throws HypervisorPluginException
     {
         if (volumes.get(volume.getUuid()) != null)
         {
-            throw new PluginException("Volume already exists");
+            throw new HypervisorPluginException(HypervisorPluginError.RESPONSE, "Volume already exists");
         }
 
         Volume created = new Volume();
@@ -113,11 +136,11 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
 
     @Override
     public void deleteVolume(final Device device, final Pool pool, final String uuid)
-        throws PluginException
+        throws HypervisorPluginException
     {
         if (volumes.get(uuid) == null)
         {
-            throw new PluginException(PluginError.RESOURCE_NOT_FOUND, "Unexisting volume");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting volume");
         }
 
         Volume removed = volumes.remove(uuid);
@@ -130,11 +153,11 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
 
     @Override
     public Volume resizeVolume(final Device device, final Pool pool, final Volume volume)
-        throws PluginException
+        throws HypervisorPluginException
     {
         if (volumes.get(volume.getUuid()) == null)
         {
-            throw new PluginException(PluginError.RESOURCE_NOT_FOUND, "Unexisting volume");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting volume");
         }
 
         Volume original = volumes.get(volume.getUuid());
@@ -160,7 +183,7 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
 
     @Override
     public Address grantAccess(final Device device, final Pool pool, final String volumeUuid,
-        final ClientDetails clientDetails) throws PluginException
+        final ClientDetails clientDetails) throws HypervisorPluginException
     {
         // Validate pool and volume existance
         getPool(device, pool.getName());
@@ -171,7 +194,7 @@ public class InMemoryStoragePlugin extends AbstractStoragePlugin
 
     @Override
     public void revokeAccess(final Device device, final Pool pool, final String volumeUuid,
-        final ClientDetails clientDetails) throws PluginException
+        final ClientDetails clientDetails) throws HypervisorPluginException
     {
         // Validate pool and volume existance
         getPool(device, pool.getName());

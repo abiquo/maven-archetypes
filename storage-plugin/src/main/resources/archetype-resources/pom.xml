@@ -16,14 +16,9 @@
     <dependencies>
         <dependency>
             <groupId>com.abiquo</groupId>
-            <artifactId>ssm-model</artifactId>
+            <artifactId>storage-plugin-model</artifactId>
         </dependency>
         <!-- Test dependencies -->
-        <dependency>
-            <groupId>com.abiquo</groupId>
-            <artifactId>ssm-model</artifactId>
-            <type>test-jar</type>
-        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
