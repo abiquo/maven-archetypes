@@ -3,6 +3,7 @@ package ${package};
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.abiquo.backup.model.BackupResult;
@@ -112,28 +113,62 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
     // Backup and restore results //
 
     /**
-     * This method is called for the Abiquo API periodical task in order to save the results in the Abiquo database.
+     * This method is called by a periodic check in Abiquo API in order to validate those backup results that
+     * should be expired according to their expiration date field.
      */
     @Override
-    public List<BackupResult> listResults(final CustomBackupConnection connection,
-        final ZonedDateTime lastCheckDate, final Set<String> inProgressResultProviderIds)
+    public boolean isBackupExpired(final CustomBackupConnection connection, String backupId)
         throws BackupPluginException
     {
-        // Retrieve the backup and restore results to store them in the Abiquo database and show them to the user.
-        // Use lastCheckDate parametter to skip to process results already processed if apply.
-        // Use inProgressResultProviderIds to check again the state of these results and return them.
+        // Return true if the backup correspongind to the given 'backupId' is expired.
+        return false;
+    }
+
+    /**
+     * This method is called by a periodic check in Abiquo API when a result still IN_PROGRESS or UNKNOWN state.
+     */
+    @Override
+    public BackupResult getBackupResult(final CustomBackupConnection connection, String backupId)
+        throws BackupPluginException
+    {
+        // Return the backup corresponding to the given id or null.
+        return new BackupResult();
+    }
+
+    /**
+     * This method is called by a periodic check in Abiquo API when a result still IN_PROGRESS or UNKNOWN state.
+     */
+    @Override
+    public RestoreResult getRestoreResult(final CustomBackupConnection connection, String restoreId)
+        throws BackupPluginException
+    {
+        // Return the restore result corresponding to the given id or null
+        return new RestoreResult();
+    }
+
+    /**
+     * This method is called for the Abiquo API periodical task in order to save the new backup results in the Abiquo database.
+     */
+    @Override
+    public List<BackupResult> listNewBackupResults(final CustomBackupConnection connection,
+        final Optional<ZonedDateTime> startDateFromLastProcessedResult)
+        throws BackupPluginException
+    {
+        // Retrieve the backup results to store them in the Abiquo database and show them to the user.
+        // Use startDateFromLastProcessedResult parameter to skip to process results already processed if apply.
         return new ArrayList<>();
     }
 
     /**
-     * This method is called from the same Abiquo API periodical task in order to remove the already expired backups
-     * from the Abiquo database.
+     * This method is called for the Abiquo API periodical task in order to save the new restore results in the Abiquo database.
      */
     @Override
-    public List<String> getExpiredResults(final CustomBackupConnection connection,
-        final List<String> providerIds) throws BackupPluginException
+    public List<RestoreResult> listNewRestoreResults(final CustomBackupConnection connection,
+        final Optional<ZonedDateTime> startDateFromLastProcessedResult)
+        throws BackupPluginException
     {
-        // Check the given results and return the expired ones.
+        // Retrieve the restore results to store them in the Abiquo database and show them to the user.
+        // Use startDateFromLastProcessedResult parameter to skip to process results already processed if apply.
         return new ArrayList<>();
     }
 
