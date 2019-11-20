@@ -9,11 +9,15 @@
 
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
+    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
     <name>Custom Abiquo Storage Plugin</name>
 
     <dependencies>
+        <dependency>
+            <groupId>com.abiquo</groupId>
+            <artifactId>commons-plugin-model</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.abiquo</groupId>
             <artifactId>storage-plugin-model</artifactId>

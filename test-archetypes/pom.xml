@@ -36,7 +36,7 @@
                             <arguments>
                                 <argument>${env.JAVA_HOME}</argument>
                                 <argument>backup-plugin-archetype</argument>
-                                <argument>${backuppluginarchetype.version}</argument>
+                                <argument>${parent.version}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -52,7 +52,7 @@
                             <arguments>
                                 <argument>${env.JAVA_HOME}</argument>
                                 <argument>storage-plugin-archetype</argument>
-                                <argument>${storagepluginarchetype.version}</argument>
+                                <argument>${parent.version}</argument>
                             </arguments>
                         </configuration>
                     </execution>
