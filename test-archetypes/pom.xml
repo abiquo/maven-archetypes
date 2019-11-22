@@ -11,7 +11,16 @@
     <packaging>jar</packaging>
     <name>Test Abiquo Plugins Archetype</name>
     <description>Project to test the abiquo plugins archetypes</description>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.abiquo</groupId>
+            <artifactId>backup-plugin-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.abiquo</groupId>
+            <artifactId>storage-plugin-model</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -22,9 +31,18 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <ignoredUnusedDeclaredDependencies combine.children="append">
+                        <ignoredUnusedDeclaredDependency>com.abiquo:storage-plugin-model</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>com.abiquo:backup-plugin-model</ignoredUnusedDeclaredDependency>
+                    </ignoredUnusedDeclaredDependencies>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.1</version>
                 <executions>
                     <execution>
                         <id>test-backup</id>
@@ -37,7 +55,7 @@
                             <arguments>
                                 <argument>${env.JAVA_HOME}</argument>
                                 <argument>backup-plugin-archetype</argument>
-                                <argument>${backuppluginarchetype.version}</argument>
+                                <argument>${project.parent.version}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -53,7 +71,7 @@
                             <arguments>
                                 <argument>${env.JAVA_HOME}</argument>
                                 <argument>storage-plugin-archetype</argument>
-                                <argument>${storagepluginarchetype.version}</argument>
+                                <argument>${project.parent.version}</argument>
                             </arguments>
                         </configuration>
                     </execution>
