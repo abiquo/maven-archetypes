@@ -2,6 +2,7 @@ package ${package};
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -172,4 +173,13 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
         return new ArrayList<>();
     }
 
+    /**
+     * This method is called for Abiquo API periodical task in order to synchroning backup policy 
+     */
+    @Override
+    public Set<String> listVirtualMachinesInBackupPolicy(final CustomBackupConnection connection, final String policyCode) throws BackupPluginException
+    {
+        //Retrieve the virtualmachines which are using specific backup policy.
+        return new HashSet<>();
+    }
 }
