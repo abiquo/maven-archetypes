@@ -177,7 +177,7 @@ public class CustomBackupPlugin implements BackupScheduling<CustomBackupConnecti
      * This method is called for Abiquo API periodical task in order to synchroning backup policy 
      */
     @Override
-    public Set<String> listVirtualMachinesInBackupPolicy(final CustomBackupConnection connection, final String bpProviderId) throws BackupPluginException
+    public Set<String> listVirtualMachinesInBackupPolicy(final CustomBackupConnection connection, final String bpProviderId, final String accountId) throws BackupPluginException
     {
         //Retrieve the virtualmachines which are using specific backup policy.
         return new HashSet<>();
