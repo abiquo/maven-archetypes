@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.abiquo</groupId>
         <artifactId>platform</artifactId>
-        <version>5.3.0</version>
+        <version>5.3.1-SNAPSHOT</version>
     </parent>
     <artifactId>storage-plugin-archetype</artifactId>
     <packaging>maven-archetype</packaging>
