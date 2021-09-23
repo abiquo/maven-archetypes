@@ -22,8 +22,8 @@ import com.google.common.base.Optional;
  * In memory example storage plugin for the Abiquo storage manager.
  */
 @PluginMetadata(type = "IN_MEMORY", // Unique name for this plugin (example: NETAPP, LVM)
-friendlyName = "generic iSCSI storage", // Fiendly name to show in the UI
-version = "4.0.0", supportedVersions = "4.0.0")
+    friendlyName = "generic iSCSI storage", // Fiendly name to show in the UI
+    version = "4.0.0", supportedVersions = "4.0.0")
 public class InMemoryStoragePlugin implements Storage<Device>
 {
     private Map<String, Volume> volumes = new HashMap<String, Volume>();
@@ -42,7 +42,7 @@ public class InMemoryStoragePlugin implements Storage<Device>
 
         pools.put(pool.getName(), pool);
     }
-    
+
     @Override
     public String getConstraint(final String key)
     {
@@ -89,30 +89,39 @@ public class InMemoryStoragePlugin implements Storage<Device>
     }
 
     @Override
-    public List<Volume> listVolumes(final Device device, final Pool pool) throws HypervisorPluginException
+    public List<Volume> listVolumes(final Device device, final String poolProviderId)
+        throws HypervisorPluginException
     {
         return new ArrayList<Volume>(volumes.values());
     }
 
     @Override
-    public Volume getVolume(final Device device, final Pool pool, final String uuid)
+    public List<Volume> listVolumesAllTiers(final Device device) throws HypervisorPluginException
+    {
+        return new ArrayList<Volume>(volumes.values());
+    }
+
+    @Override
+    public Volume getVolume(final Device device, final String poolProviderId, final String uuid)
         throws HypervisorPluginException
     {
         Volume volume = volumes.get(uuid);
         if (volume == null)
         {
-            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting volume");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND,
+                "Unexisting volume");
         }
         return volume;
     }
 
     @Override
-    public Volume createVolume(final Device device, final Pool pool, final Volume volume)
-        throws HypervisorPluginException
+    public Volume createVolume(final Device device, final String poolProviderId,
+        final Volume volume) throws HypervisorPluginException
     {
         if (volumes.get(volume.getUuid()) != null)
         {
-            throw new HypervisorPluginException(HypervisorPluginError.RESPONSE, "Volume already exists");
+            throw new HypervisorPluginException(HypervisorPluginError.RESPONSE,
+                "Volume already exists");
         }
 
         Volume created = new Volume();
@@ -120,14 +129,14 @@ public class InMemoryStoragePlugin implements Storage<Device>
         created.setSizeInMB(volume.getSizeInMB());
         created.setAvailableInMB(volume.getSizeInMB());
         created.setUsedInMB(0L);
-        
+
         created.setAddress(Address.iscsi(device.getServiceIp(), device.getServicePort(),
             "iqn.1993-08.org.debian:01:b22bb69c97d3", 0));
 
         volumes.put(created.getUuid(), created);
 
         // Update the available size in the pool
-        Pool updatedPool = pools.get(pool.getName());
+        Pool updatedPool = pools.get(poolProviderId);
         updatedPool.setUsedInMB(updatedPool.getUsedInMB() + created.getSizeInMB());
         updatedPool.setAvailableInMB(updatedPool.getSizeInMB() - updatedPool.getUsedInMB());
 
@@ -135,29 +144,31 @@ public class InMemoryStoragePlugin implements Storage<Device>
     }
 
     @Override
-    public void deleteVolume(final Device device, final Pool pool, final String uuid)
+    public void deleteVolume(final Device device, final String poolProviderId, final String uuid)
         throws HypervisorPluginException
     {
         if (volumes.get(uuid) == null)
         {
-            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting volume");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND,
+                "Unexisting volume");
         }
 
         Volume removed = volumes.remove(uuid);
 
         // Update the available size in the pool
-        Pool updatedPool = pools.get(pool.getName());
+        Pool updatedPool = pools.get(poolProviderId);
         updatedPool.setUsedInMB(updatedPool.getUsedInMB() - removed.getSizeInMB());
         updatedPool.setAvailableInMB(updatedPool.getSizeInMB() - updatedPool.getUsedInMB());
     }
 
     @Override
-    public Volume resizeVolume(final Device device, final Pool pool, final Volume volume)
-        throws HypervisorPluginException
+    public Volume resizeVolume(final Device device, final String poolProviderId,
+        final Volume volume) throws HypervisorPluginException
     {
         if (volumes.get(volume.getUuid()) == null)
         {
-            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting volume");
+            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND,
+                "Unexisting volume");
         }
 
         Volume original = volumes.get(volume.getUuid());
@@ -174,7 +185,7 @@ public class InMemoryStoragePlugin implements Storage<Device>
         long sizeIncrement = volume.getSizeInMB() - original.getSizeInMB();
 
         // Update the available size in the pool
-        Pool updatedPool = pools.get(pool.getName());
+        Pool updatedPool = pools.get(poolProviderId);
         updatedPool.setUsedInMB(updatedPool.getUsedInMB() + sizeIncrement);
         updatedPool.setAvailableInMB(updatedPool.getSizeInMB() - updatedPool.getUsedInMB());
 
@@ -182,23 +193,23 @@ public class InMemoryStoragePlugin implements Storage<Device>
     }
 
     @Override
-    public Address grantAccess(final Device device, final Pool pool, final String volumeUuid,
-        final ClientDetails clientDetails) throws HypervisorPluginException
+    public Address grantAccess(final Device device, final String poolProviderId,
+        final String volumeUuid, final ClientDetails clientDetails) throws HypervisorPluginException
     {
         // Validate pool and volume existance
-        getPool(device, pool.getName());
-        Volume volume = getVolume(device, pool, volumeUuid);
+        getPool(device, poolProviderId);
+        Volume volume = getVolume(device, poolProviderId, volumeUuid);
 
         return volume.getAddress();
     }
 
     @Override
-    public void revokeAccess(final Device device, final Pool pool, final String volumeUuid,
-        final ClientDetails clientDetails) throws HypervisorPluginException
+    public void revokeAccess(final Device device, final String poolProviderId,
+        final String volumeUuid, final ClientDetails clientDetails) throws HypervisorPluginException
     {
         // Validate pool and volume existance
-        getPool(device, pool.getName());
-        getVolume(device, pool, volumeUuid);
+        getPool(device, poolProviderId);
+        getVolume(device, poolProviderId, volumeUuid);
 
         // Revoke access
     }
