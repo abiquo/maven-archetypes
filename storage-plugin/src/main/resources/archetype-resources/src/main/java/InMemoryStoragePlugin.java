@@ -72,23 +72,6 @@ public class InMemoryStoragePlugin implements Storage<Device>
     }
 
     @Override
-    public List<Pool> listPools(final Device device) throws HypervisorPluginException
-    {
-        return new ArrayList<Pool>(pools.values());
-    }
-
-    @Override
-    public Pool getPool(final Device device, final String poolName) throws HypervisorPluginException
-    {
-        Pool pool = pools.get(poolName);
-        if (pool == null)
-        {
-            throw new HypervisorPluginException(HypervisorPluginError.NOT_FOUND, "Unexisting pool");
-        }
-        return pool;
-    }
-
-    @Override
     public List<Volume> listVolumes(final Device device, final String poolProviderId)
         throws HypervisorPluginException
     {
@@ -190,27 +173,5 @@ public class InMemoryStoragePlugin implements Storage<Device>
         updatedPool.setAvailableInMB(updatedPool.getSizeInMB() - updatedPool.getUsedInMB());
 
         return resize;
-    }
-
-    @Override
-    public Address grantAccess(final Device device, final String poolProviderId,
-        final String volumeUuid, final ClientDetails clientDetails) throws HypervisorPluginException
-    {
-        // Validate pool and volume existance
-        getPool(device, poolProviderId);
-        Volume volume = getVolume(device, poolProviderId, volumeUuid);
-
-        return volume.getAddress();
-    }
-
-    @Override
-    public void revokeAccess(final Device device, final String poolProviderId,
-        final String volumeUuid, final ClientDetails clientDetails) throws HypervisorPluginException
-    {
-        // Validate pool and volume existance
-        getPool(device, poolProviderId);
-        getVolume(device, poolProviderId, volumeUuid);
-
-        // Revoke access
     }
 }
